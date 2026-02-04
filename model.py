@@ -2,6 +2,8 @@ from cleaning import clean_ckd_dataset
 import torch
 from torch import nn
 from sklearn.model_selection import train_test_split
+import numpy as np
+import pandas as pd
 
 RANDOM_SEED = 42
 
@@ -10,7 +12,7 @@ df = clean_ckd_dataset()
 
 X = df.drop("classification", axis=1).values
 y = df["classification"].values
-
+print(np.unique(X))  # make sure no strings remain
 
 X = torch.tensor(X, dtype=torch.float32)
 y = torch.tensor(y, dtype=torch.float32).unsqueeze(1)

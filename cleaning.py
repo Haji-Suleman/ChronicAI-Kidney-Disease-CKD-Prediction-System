@@ -14,7 +14,6 @@ def clean_ckd_dataset(file_path="./kidney_disease.csv") -> pd.DataFrame:
     # Strip extra spaces
     for col in df.select_dtypes(include="object").columns:
         df[col] = df[col].str.strip()
-    df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
 
     # Clean target column
     df["classification"] = df["classification"].str.strip()
@@ -35,6 +34,7 @@ def clean_ckd_dataset(file_path="./kidney_disease.csv") -> pd.DataFrame:
     df["pe"] = df["pe"].map({"yes": 1, "no": 0})
     df["ane"] = df["ane"].map({"yes": 1, "no": 0})
 
+    
     # Return cleaned dataframe
     return df
 
