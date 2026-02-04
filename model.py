@@ -4,6 +4,7 @@ from torch import nn
 from sklearn.model_selection import train_test_split
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 RANDOM_SEED = 42
 
@@ -54,7 +55,8 @@ optimizer = torch.optim.Adam(params=model_8.parameters(), lr=0.05)
 ### Training L00P ####
 
 epochs = 400
-
+train_loss_list = []
+test_loss_list = []
 for epoch in range(epochs):
     model_8.train()
     y_logits = torch.sigmoid(model_8(X_train))
@@ -70,3 +72,8 @@ for epoch in range(epochs):
         test_preds = torch.round(test_logits)
         if epoch % 40 == 0:
             print(f"Epoch: {epoch}, loss: {loss:.2f}, test_loss: {test_loss:.2f}")
+            train_loss_list.append(loss)
+            test_loss_list.append(test_loss)
+plt.title("🩺 Chronic Kidney Disease (CKD) Prediction System")
+plt.plot(train_loss_list, test_loss_list)
+plt.show()
