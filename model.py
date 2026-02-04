@@ -13,9 +13,12 @@ y = df["classification"].values
 
 
 X = torch.tensor(X, dtype=torch.float32)
-y = torch.tensor(y, dtype=torch.float32).unsqueeze()
+y = torch.tensor(y, dtype=torch.float32).unsqueeze(1)
 
-X_train, X_test, y_train, y_test = train_test_split()
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=RANDOM_SEED
+)
 
 
 class Chronic_Kidney_Disease(nn.Module):
@@ -27,7 +30,11 @@ class Chronic_Kidney_Disease(nn.Module):
             nn.Linear(in_features=28, out_features=10),
             nn.ReLU(),
             nn.Linear(in_features=10, out_features=1),
+            nn.Sigmoid(),
         )
 
     def forward(self, X) -> torch.Tensor:
         return self.model(X)
+
+
+model_8 = Chronic_Kidney_Disease()

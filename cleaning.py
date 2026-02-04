@@ -12,6 +12,8 @@ def clean_ckd_dataset(file_path="./kidney_disease.csv") -> pd.DataFrame:
     df = pd.read_csv(file_path)
 
     # Strip extra spaces
+    for col in df.select_dtypes(include="object").columns:
+        df[col] = df[col].str.strip()
     df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
 
     # Clean target column
