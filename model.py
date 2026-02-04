@@ -40,3 +40,14 @@ class Chronic_Kidney_Disease(nn.Module):
 
 
 model_8 = Chronic_Kidney_Disease()
+
+
+print(model_8.state_dict())
+
+
+
+
+###  Settting up LossFunction & Optimizer   ###
+
+loss_fn = nn.BCELoss()
+optimizer = torch.optim.Adam(params=model_8.parameters(),lr=0.05)
