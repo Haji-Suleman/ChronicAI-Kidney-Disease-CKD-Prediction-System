@@ -59,7 +59,7 @@ train_loss_list = []
 test_loss_list = []
 for epoch in range(epochs):
     model_8.train()
-    y_logits = torch.sigmoid(model_8(X_train))
+    y_logits = model_8(X_train)
     y_preds = torch.round(y_logits)
     loss = loss_fn(y_logits, y_train)
     optimizer.zero_grad()
@@ -67,13 +67,19 @@ for epoch in range(epochs):
     optimizer.step()
     model_8.eval()
     with torch.inference_mode():
-        test_logits = torch.sigmoid(model_8(X_test))
+        test_logits = model_8(X_test)
         test_loss = loss_fn(test_logits, y_test)
         test_preds = torch.round(test_logits)
         if epoch % 40 == 0:
-            print(f"Epoch: {epoch}, loss: {loss:.2f}, test_loss: {test_loss:.2f}")
-            train_loss_list.append(loss)
-            test_loss_list.append(test_loss)
-plt.title("🩺 Chronic Kidney Disease (CKD) Prediction System")
-plt.plot(train_loss_list, test_loss_list)
+            print(
+                f"Epoch: {epoch}, loss: {loss.item():.2f}, test_loss: {test_loss.item():.2f}"
+            )
+            train_loss_list.append(loss.item())
+            test_loss_list.append(test_loss.item())
+plt.plot(range(epochs), train_loss_list, label="Train Loss")
+plt.plot(range(epochs), test_loss_list, label="Test Loss")
+plt.xlabel("Epochs")
+plt.ylabel("Loss")
+plt.title("🩺 CKD Prediction Loss Curve")
+plt.legend()
 plt.show()
