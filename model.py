@@ -1,6 +1,9 @@
 from cleaning import clean_ckd_dataset
 import torch
 from torch import nn
+from sklearn.model_selection import train_test_split
+
+RANDOM_SEED = 42
 
 df = clean_ckd_dataset()
 
@@ -11,6 +14,9 @@ y = df["classification"].values
 
 X = torch.tensor(X, dtype=torch.float32)
 y = torch.tensor(y, dtype=torch.float32).unsqueeze()
+
+X_train, X_test, y_train, y_test = train_test_split()
+
 
 class Chronic_Kidney_Disease(nn.Module):
     def __init__(self):
@@ -25,4 +31,3 @@ class Chronic_Kidney_Disease(nn.Module):
 
     def forward(self, X) -> torch.Tensor:
         return self.model(X)
-
