@@ -1,0 +1,28 @@
+from cleaning import clean_ckd_dataset
+import torch
+from torch import nn
+
+df = clean_ckd_dataset()
+
+
+X = df.drop("classification", axis=1).values
+y = df["classification"].values
+
+
+X = torch.tensor(X, dtype=torch.float32)
+y = torch.tensor(y, dtype=torch.float32).unsqueeze()
+
+class Chronic_Kidney_Disease(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.model = nn.Sequential(
+            nn.Linear(in_features=26, out_features=28),
+            nn.ReLU(),
+            nn.Linear(in_features=28, out_features=10),
+            nn.ReLU(),
+            nn.Linear(in_features=10, out_features=1),
+        )
+
+    def forward(self, X) -> torch.Tensor:
+        return self.model(X)
+

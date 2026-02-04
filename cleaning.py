@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 
 
-def clean_ckd_dataset(file_path="./kidney_disease.csv"):
+def clean_ckd_dataset(file_path="./kidney_disease.csv") -> pd.DataFrame:
     # Load dataset
     df = pd.read_csv(file_path)
 
