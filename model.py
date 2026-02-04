@@ -27,7 +27,7 @@ class Chronic_Kidney_Disease(nn.Module):
     def __init__(self):
         super().__init__()
         self.model = nn.Sequential(
-            nn.Linear(in_features=26, out_features=28),
+            nn.Linear(in_features=25, out_features=28),
             nn.ReLU(),
             nn.Linear(in_features=28, out_features=10),
             nn.ReLU(),
@@ -51,22 +51,22 @@ loss_fn = nn.BCELoss()
 optimizer = torch.optim.Adam(params=model_8.parameters(), lr=0.05)
 
 
-### Training L00p ####
+### Training L00P ####
 
 epochs = 400
 
 for epoch in range(epochs):
     model_8.train()
-    y_logits = torch.sigmoid(model_8(X_train)).unsqueeze()
+    y_logits = torch.sigmoid(model_8(X_train))
     y_preds = torch.round(y_logits)
     loss = loss_fn(y_logits, y_train)
     optimizer.zero_grad()
     loss.backward()
     optimizer.step()
-    torch.eval()
+    model_8.eval()
     with torch.inference_mode():
-        test_logits = torch.sigmoid(model_8(X_test)).unsqueeze()
+        test_logits = torch.sigmoid(model_8(X_test))
         test_loss = loss_fn(test_logits, y_test)
         test_preds = torch.round(test_logits)
         if epoch % 40 == 0:
-            print(f"Epoch: {epoch}, loss: {loss}, test_loss: {test_loss}")
+            print(f"Epoch: {epoch}, loss: {loss:.2f}, test_loss: {test_loss:.2f}")
