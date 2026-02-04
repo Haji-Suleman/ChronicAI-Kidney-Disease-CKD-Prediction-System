@@ -34,7 +34,12 @@ def clean_ckd_dataset(file_path="./kidney_disease.csv") -> pd.DataFrame:
     df["pe"] = df["pe"].map({"yes": 1, "no": 0})
     df["ane"] = df["ane"].map({"yes": 1, "no": 0})
 
-    
+    # Adding Some Extra Layers
+    for col in df.columns:
+        if df[col].dtype == "object":
+            df[col] = pd.to_numeric(df[col], errors="coerce")
+    df = df.astype(float)
+
     # Return cleaned dataframe
     return df
 
