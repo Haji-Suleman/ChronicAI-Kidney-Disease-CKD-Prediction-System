@@ -89,6 +89,7 @@ for epoch in range(epochs):
         print(
             f"Epoch {epoch}: Train Loss={loss.item():.4f}, Test Loss={test_loss.item():.4f}"
         )
+torch.save(model_8.state_dict(), "ckd_model.pth")
 print(f"Accuracy of The Function is  {y_test,test_logits}")
 # Plot losses
 plt.plot(range(epochs), train_loss_list, label="Train Loss")
