@@ -61,6 +61,13 @@ epochs = 400
 train_loss_list = []
 test_loss_list = []
 
+
+# Model Accuracy
+def accuracy_fn(y_true, y_test):
+    correct = torch.eq(y_true, y_test).sum().items()
+    return correct
+
+
 for epoch in range(epochs):
     model_8.train()
     y_logits = model_8(X_train)  # sigmoid already in model
@@ -82,7 +89,7 @@ for epoch in range(epochs):
         print(
             f"Epoch {epoch}: Train Loss={loss.item():.4f}, Test Loss={test_loss.item():.4f}"
         )
-
+print(f"Accuracy of The Function is  {y_test,test_logits}")
 # Plot losses
 plt.plot(range(epochs), train_loss_list, label="Train Loss")
 plt.plot(range(epochs), test_loss_list, label="Test Loss")
@@ -91,3 +98,21 @@ plt.ylabel("Loss")
 plt.title("Chronic Kidney Disease (CKD) Prediction System")
 plt.legend()
 plt.show()
+
+
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+
+with torch.no_grad():
+    logits = model_8(X_test)
+    probs = torch.sigmoid(logits)
+    preds = (probs > 0.5).cpu().numpy()
+    y_true = y_test.cpu().numpy()
+
+cm = confusion_matrix(y_true, preds)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+disp.plot()
+plt.title("Confusion Matrix - CKD Model")
+plt.show()
+from sklearn.metrics import classification_report
+
+print(classification_report(y_true, preds, target_names=["notckd", "ckd"]))
