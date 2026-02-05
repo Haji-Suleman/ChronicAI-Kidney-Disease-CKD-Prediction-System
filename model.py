@@ -19,7 +19,7 @@ df = clean_ckd_dataset()
 
 
 # Features & target
-X = df.drop("classification", axis=1).values
+X = df.drop(columns=["id", "classification"], axis=1).values
 y = df["classification"].values
 scaler = StandardScaler()
 X = scaler.fit_transform(X)
@@ -117,5 +117,3 @@ plt.show()
 from sklearn.metrics import classification_report
 
 print(classification_report(y_true, preds, target_names=["notckd", "ckd"]))
-
-

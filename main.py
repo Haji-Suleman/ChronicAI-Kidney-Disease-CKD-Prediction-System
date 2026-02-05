@@ -50,7 +50,8 @@ class Chronic_Kidney_Disease(nn.Module):
         return self.model(X)
 
 
-INPUT_DIM = 24  # updated to match number of features
+# Input dimension = 24 features
+INPUT_DIM = 24
 model = Chronic_Kidney_Disease(INPUT_DIM)
 model.load_state_dict(torch.load("ckd_model.pth", map_location="cpu"))
 model.eval()
@@ -59,6 +60,7 @@ model.eval()
 # Prediction endpoint
 @app.post("/predict")
 def predict(features: CKDFeatures):
+    # Create tensor from input features
     x = torch.tensor(
         [
             [
@@ -91,8 +93,10 @@ def predict(features: CKDFeatures):
         dtype=torch.float32,
     )
 
+    # Model inference
     with torch.no_grad():
         logits = model(x)
         prob = torch.sigmoid(logits).item()
         pred = "ckd" if prob > 0.5 else "notckd"
+
     return {"prediction": pred, "probability": prob}
