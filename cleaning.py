@@ -6,6 +6,8 @@
 import pandas as pd
 import numpy as np
 
+from sklearn.preprocessing import StandardScaler
+
 
 def clean_ckd_dataset(file_path="./kidney_disease.csv") -> pd.DataFrame:
     # Load dataset

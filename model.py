@@ -10,23 +10,19 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from sklearn.preprocessing import StandardScaler
 
 RANDOM_SEED = 42
 
 # Load dataset
 df = clean_ckd_dataset()
 
-# Ensure all columns numeric
-for col in df.columns:
-    if df[col].dtype == "object":
-        df[col] = pd.to_numeric(df[col], errors="coerce")
-df = df.dropna()
-df = df.astype(float)
 
 # Features & target
 X = df.drop("classification", axis=1).values
 y = df["classification"].values
-
+scaler = StandardScaler()
+X = scaler.fit_transform(X)
 # Convert to tensors
 X = torch.tensor(X, dtype=torch.float32)
 y = torch.tensor(y, dtype=torch.float32).unsqueeze(1)
