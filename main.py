@@ -5,6 +5,7 @@ from torch import nn
 
 app = FastAPI()
 
+
 # Pydantic model with all 24 features
 class CKDFeatures(BaseModel):
     age: float
@@ -32,6 +33,7 @@ class CKDFeatures(BaseModel):
     pe: int
     ane: int
 
+
 # PyTorch model
 class Chronic_Kidney_Disease(nn.Module):
     def __init__(self, input_dim):
@@ -41,29 +43,54 @@ class Chronic_Kidney_Disease(nn.Module):
             nn.ReLU(),
             nn.Linear(28, 10),
             nn.ReLU(),
-            nn.Linear(10, 1)
+            nn.Linear(10, 1),
         )
 
     def forward(self, X):
         return self.model(X)
+
 
 INPUT_DIM = 24  # updated to match number of features
 model = Chronic_Kidney_Disease(INPUT_DIM)
 model.load_state_dict(torch.load("ckd_model.pth", map_location="cpu"))
 model.eval()
 
+
 # Prediction endpoint
 @app.post("/predict")
 def predict(features: CKDFeatures):
-    x = torch.tensor([[
-        features.age, features.bp, features.sg, features.al, features.su,
-        features.rbc, features.pc, features.pcc, features.ba,
-        features.bgr, features.bu, features.sc, features.sod, features.pot,
-        features.hemo, features.pcv, features.wc, features.rc,
-        features.htn, features.dm, features.cad, features.appet,
-        features.pe, features.ane
-    ]], dtype=torch.float32)
-    
+    x = torch.tensor(
+        [
+            [
+                features.age,
+                features.bp,
+                features.sg,
+                features.al,
+                features.su,
+                features.rbc,
+                features.pc,
+                features.pcc,
+                features.ba,
+                features.bgr,
+                features.bu,
+                features.sc,
+                features.sod,
+                features.pot,
+                features.hemo,
+                features.pcv,
+                features.wc,
+                features.rc,
+                features.htn,
+                features.dm,
+                features.cad,
+                features.appet,
+                features.pe,
+                features.ane,
+            ]
+        ],
+        dtype=torch.float32,
+    )
+
     with torch.no_grad():
         logits = model(x)
         prob = torch.sigmoid(logits).item()
