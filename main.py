@@ -11,9 +11,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
+from fastapi import FastAPI
 
 RANDOM_SEED = 42
 
+app = FastAPI()
 # Load dataset
 df = clean_ckd_dataset()
 
@@ -117,3 +119,13 @@ plt.show()
 from sklearn.metrics import classification_report
 
 print(classification_report(y_true, preds, target_names=["notckd", "ckd"]))
+
+
+@app.post("/predict")
+def predict(features: list[float]):
+    x = torch.tensor([features], dtype=torch.float32)
+    with torch.no_grad():
+        logits = model_8(x)
+        prob = torch.sigmoid(logits).item()
+        pred = "ckd" if prob > 0.5 else "notckd"
+    return {"prediction": pred, "probability": prob}
