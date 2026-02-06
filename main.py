@@ -94,7 +94,7 @@ def predict(features: CKDFeatures):
     )
 
     # Model inference
-    with torch.no_grad():
+    with torch.inference_mode():
         logits = model(x)
         prob = torch.sigmoid(logits).item()
         pred = "ckd" if prob > 0.5 else "notckd"
